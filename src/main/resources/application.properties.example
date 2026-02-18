@@ -1,0 +1,12 @@
+spring.application.name=user
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+spring.jpa.properties.hibernate.default_schema=userandtodo
+spring.datasource.username=your_username
+spring.datasource.password=your_password
+
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.show-sql=true
+
+jwt.access.secret.key=${JWT_ACCESS_SECRET_KEY:your_access_secret_key}
+jwt.refresh.secret.key=${JWT_REFRESH_SECRET_KEY:your_refresh_secret_key}
