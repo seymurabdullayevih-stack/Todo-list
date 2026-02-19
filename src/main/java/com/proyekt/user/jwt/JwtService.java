@@ -36,7 +36,7 @@ public class JwtService {
           return Jwts.builder()
                 .subject(userDetails.getUsername())   // istifadecinin adi (User) username       (1.2)
                 .issuedAt(new Date())  // tokienin yaranma vaxti(indi)                           (1.3)
-                .expiration(new Date(System.currentTimeMillis() + 1000*60*30))  // bitme vaxti   (1.4)
+                .expiration(new Date(System.currentTimeMillis() + 1000*60*15))  // bitme vaxti   (1.4)
                 .signWith(getkey(), SignatureAlgorithm.HS256)   // Token imzalanması:1. getkey() - bizim gizli açarımız (SECRET_KEY)2. HS256 - HMAC SHA-256 şifrələmə alqoritmi Bu sayədə token dəyişdirildimi yoxlamaq olur (1.5)
                 .compact();
     }
