@@ -49,7 +49,13 @@ public class SecurtiyConfig {
         http.csrf(csrf ->csrf.disable())
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(AUTHENTICATE, REGISTER, REFRESH).permitAll()
-                                .requestMatchers(SWAGGER_PATHS).permitAll()
+                                .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui.html",
+                                "/swagger-resources/**",
+                                "/webjars/**"
+                        ).permitAll()
                                 .anyRequest()
                                 .authenticated())
                 .exceptionHandling(exception->exception  // 403 xetasini 401 cevrririk
