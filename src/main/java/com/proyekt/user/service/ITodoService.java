@@ -15,6 +15,8 @@ public interface ITodoService {
 
     public  void deleteTodo(Long id,String username);
 
+    public void updateTodoImage(Long userId, String imageUrl,Long id);
+
 
 
 

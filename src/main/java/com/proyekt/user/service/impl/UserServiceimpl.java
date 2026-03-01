@@ -55,9 +55,13 @@ public class UserServiceimpl implements IUserService {
 
     @Override
     public void updateProfileImage(Long userId, String imageUrl) {
+
         User user = repositoryUser.findById(userId)
+
                 .orElseThrow(() -> new RuntimeException("User tapılmadı"));
+
         user.setProfileImageUrl(imageUrl);
+
         repositoryUser.save(user);
     }
 }

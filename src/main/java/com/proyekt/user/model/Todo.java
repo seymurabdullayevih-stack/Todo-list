@@ -23,6 +23,9 @@ public class Todo {
     @Column(name = "completed",nullable = false)
     private boolean completed;
 
+    @Column(name = "todo_image_url")
+    private String todoImageUrl;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

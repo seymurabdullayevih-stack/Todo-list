@@ -147,4 +147,17 @@ public class TodoServiceImpl implements ITodoService {
 
     }
 
+    @Override
+    public void updateTodoImage(Long userId, String imageUrl,Long id) {
+
+       Optional<Todo> todoOptional = repositoryTodo.findByIdAndUserId(id,userId);
+
+       Todo todoImage = todoOptional.get();
+
+       todoImage.setTodoImageUrl(imageUrl);
+
+       repositoryTodo.save(todoImage);
+
+    }
+
 }

@@ -9,4 +9,6 @@ public interface IS3Controller {
 
 
     public ResponseEntity<String> uploadFile( Long userId,MultipartFile file);
+
+    public ResponseEntity<String> uploadTodoImageFile(Long userId,MultipartFile file,Long id);
 }

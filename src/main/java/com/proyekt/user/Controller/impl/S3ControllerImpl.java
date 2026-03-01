@@ -2,6 +2,7 @@ package com.proyekt.user.Controller.impl;
 
 import com.proyekt.user.Controller.IS3Controller;
 import com.proyekt.user.service.IS3Service;
+import com.proyekt.user.service.ITodoService;
 import com.proyekt.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ public class S3ControllerImpl implements IS3Controller {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private ITodoService todoService;
 
     // Spring avtomatik S3Service-i tapıb buraya verir (Constructor Injection)
     // Əl ilə "new S3Service()" yazmağa ehtiyac yoxdur
@@ -65,6 +69,27 @@ public class S3ControllerImpl implements IS3Controller {
             // Xəta olarsa 500 qaytarır
             return ResponseEntity.status(500).body("Fayl yüklənmədi: " + e.getMessage());
         }
+
+    }
+
+    @Override
+    @PostMapping(path = "/upload/{userId}/{id}")
+    public ResponseEntity<String> uploadTodoImageFile(@PathVariable(name = "userId") Long userId,
+                                                      @RequestParam("file") MultipartFile file,
+                                                      @PathVariable(name = "id") Long id) {
+
+        try {
+            String fileUrl = is3Service.uploadFile(file);
+
+            todoService.updateTodoImage(userId,fileUrl,id);
+
+            return ResponseEntity.ok(fileUrl);
+
+        }catch (Exception e){
+
+           return ResponseEntity.status(500).body("fayl yuklenmedi"+ e.getMessage());
+        }
+
 
     }
 }
