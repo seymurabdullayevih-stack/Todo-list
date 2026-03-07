@@ -5,17 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class DtoTodo {
+@NoArgsConstructor
+public class TodoUpdateRequest {
 
     private Long id;
 
     private String title;
 
-    private boolean completed;
+    private Boolean completed;
 
-    private Long userId;
-
-    private String imageTodoUrl;
+    private String image;
 }

@@ -1,14 +1,13 @@
 package com.proyekt.user.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class DtoRegisterUser {
+@NoArgsConstructor
+public class DtoRequsetUser {
 
     private String firstName;
 
@@ -17,8 +16,6 @@ public class DtoRegisterUser {
     private String userName;
 
     private String email;
-
-    private String password;
 
     private String imageUser;
 }

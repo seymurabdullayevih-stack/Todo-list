@@ -2,8 +2,10 @@ package com.proyekt.user.Controller.impl;
 
 
 import com.proyekt.user.Controller.ITodoController;
+import com.proyekt.user.dto.DtoImageDelete;
 import com.proyekt.user.dto.DtoTodo;
 import com.proyekt.user.dto.TodoRequest;
+import com.proyekt.user.dto.TodoUpdateRequest;
 import com.proyekt.user.service.ITodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -31,7 +33,7 @@ public class TodoControllerImpl implements ITodoController {
     }
 
     @Override
-    @PostMapping(path = "/todos")
+    @PostMapping(path = "/todo")
     public DtoTodo saveTodo(@RequestBody TodoRequest todoRequest, Authentication authentication) {
 
 
@@ -43,7 +45,7 @@ public class TodoControllerImpl implements ITodoController {
     }
 
     @Override
-    @PutMapping(path = "/update/completed/{id}")
+    @PutMapping(path = "/todo/{id}")
     public DtoTodo updateTodo(@PathVariable(name = "id") Long id,
             @RequestBody TodoRequest todoRequest, Authentication authentication) {
 
@@ -53,11 +55,31 @@ public class TodoControllerImpl implements ITodoController {
     }
 
     @Override
-    @DeleteMapping(path = "/delete/{id}")
+    @DeleteMapping(path = "/todo/{id}")
     public void deleteTodo(@PathVariable(name = "id") Long id, Authentication authentication) {
 
         String userName = authentication.getName();
 
         todoService.deleteTodo(id,userName);
+    }
+
+    @Override
+    @GetMapping(path = "/id-todo/{id}")
+    public DtoTodo findByIdTodo(@PathVariable(name = "id") Long id,
+                                Authentication authentication) {
+
+        String userName = authentication.getName();
+
+        return todoService.findByIdTodo(id,userName);
+
+    }
+
+    @Override
+    @PatchMapping(path = "/todo/{id}")
+    public TodoUpdateRequest updatePost(@PathVariable(name = "id") Long id, Authentication authentication,
+                                        @RequestBody TodoUpdateRequest todoUpdateRequest) {
+
+        String userName = authentication.getName();
+        return todoService.updatePost(id,todoUpdateRequest,userName);
     }
 }

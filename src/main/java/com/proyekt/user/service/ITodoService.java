@@ -1,7 +1,10 @@
 package com.proyekt.user.service;
 
+import com.proyekt.user.dto.DtoImageDelete;
 import com.proyekt.user.dto.DtoTodo;
 import com.proyekt.user.dto.TodoRequest;
+import com.proyekt.user.dto.TodoUpdateRequest;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 
@@ -17,7 +20,7 @@ public interface ITodoService {
 
     public void updateTodoImage(Long userId, String imageUrl,Long id);
 
+    public DtoTodo findByIdTodo(Long id,String userName);
 
-
-
+    public TodoUpdateRequest updatePost(Long id, TodoUpdateRequest todoUpdateRequest, String userName);
 }

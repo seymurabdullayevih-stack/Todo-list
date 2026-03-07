@@ -10,8 +10,10 @@ package com.proyekt.user.service.impl;
 *
 * */
 
+import com.proyekt.user.dto.DtoImageDelete;
 import com.proyekt.user.dto.DtoTodo;
 import com.proyekt.user.dto.TodoRequest;
+import com.proyekt.user.dto.TodoUpdateRequest;
 import com.proyekt.user.exception.BaseException;
 import com.proyekt.user.exception.ErrorMessage;
 import com.proyekt.user.exception.MessageType;
@@ -22,6 +24,7 @@ import com.proyekt.user.repository.RepositoryUser;
 import com.proyekt.user.service.ITodoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,17 +49,17 @@ public class TodoServiceImpl implements ITodoService {
 
         Optional<User> userDB = repositoryUser.findByUserName(userName);
 
-        if (userDB.isEmpty()){
+        if (userDB.isEmpty()) {
 
-            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST,null));
+            throw new BaseException(new ErrorMessage(MessageType.NO_RECORD_EXIST, null));
         }
 
         User user = userDB.get();
 
         List<Todo> todoList = repositoryTodo.findByUserId(user.getId());
 
-        if (todoList != null){
-            for (Todo todo : todoList){
+        if (todoList != null) {
+            for (Todo todo : todoList) {
 
                 DtoTodo dtoTodo = new DtoTodo();
 
@@ -74,28 +77,28 @@ public class TodoServiceImpl implements ITodoService {
     }
 
 
-
-
     @Override
     public DtoTodo saveTodo(TodoRequest todoRequest, String userName) {
 
         DtoTodo dtoTodo = new DtoTodo();
 
-       Optional <User> user = repositoryUser.findByUserName(userName);
+        Optional<User> user = repositoryUser.findByUserName(userName);
 
-       Todo todo = new Todo();
+        Todo todo = new Todo();
 
-       todo.setUser(user.get());
-       todo.setCompleted(todoRequest.isCompleted());
-       todo.setTitle(todoRequest.getTitle());
+        todo.setUser(user.get());
+        todo.setCompleted(todoRequest.isCompleted());
+        todo.setTitle(todoRequest.getTitle());
+        todo.setTodoImageUrl(todoRequest.getTodoImageUrl());
 
-       Todo tododb = repositoryTodo.save(todo);
+        Todo tododb = repositoryTodo.save(todo);
 
 
-       dtoTodo.setId(tododb.getId());
-       dtoTodo.setCompleted(tododb.isCompleted());
-       dtoTodo.setTitle(tododb.getTitle());
-       dtoTodo.setUserId(tododb.getUser().getId());
+        dtoTodo.setId(tododb.getId());
+        dtoTodo.setCompleted(tododb.isCompleted());
+        dtoTodo.setTitle(tododb.getTitle());
+        dtoTodo.setUserId(tododb.getUser().getId());
+        dtoTodo.setImageTodoUrl(tododb.getTodoImageUrl());
 
         return dtoTodo;
     }
@@ -109,11 +112,11 @@ public class TodoServiceImpl implements ITodoService {
 
         Optional<User> userID = repositoryUser.findByUserName(userName);
 
-        if (userID.isEmpty()){
+        if (userID.isEmpty()) {
             System.out.println("user tapilamdi");
         }
 
-       Optional<Todo> todoOptional = repositoryTodo.findByIdAndUserId(id,userID.get().getId());
+        Optional<Todo> todoOptional = repositoryTodo.findByIdAndUserId(id, userID.get().getId());
 
 
         Todo todoDB = todoOptional.get();
@@ -128,36 +131,91 @@ public class TodoServiceImpl implements ITodoService {
         dtoTodo.setCompleted(todo1.isCompleted());
 
 
-
-
         return dtoTodo;
     }
 
     @Transactional
     @Override
-    public void deleteTodo(Long id, String userName){
+    public void deleteTodo(Long id, String userName) {
 
-       Optional<User> userID = repositoryUser.findByUserName(userName);
+        Optional<User> userID = repositoryUser.findByUserName(userName);
 
-       if (userID.isEmpty()){
-           throw new BaseException(new ErrorMessage(MessageType.USER_NOT_FOUND,id.toString()));
-       }
+        if (userID.isEmpty()) {
+            throw new BaseException(new ErrorMessage(MessageType.USER_NOT_FOUND, id.toString()));
+        }
 
-       repositoryTodo.deleteByIdAndUserId(id, userID.get().getId());
+        repositoryTodo.deleteByIdAndUserId(id, userID.get().getId());
 
     }
 
     @Override
-    public void updateTodoImage(Long userId, String imageUrl,Long id) {
+    public void updateTodoImage(Long userId, String imageUrl, Long id) {
 
-       Optional<Todo> todoOptional = repositoryTodo.findByIdAndUserId(id,userId);
+        Optional<Todo> todoOptional = repositoryTodo.findByIdAndUserId(id, userId);
 
-       Todo todoImage = todoOptional.get();
+        Todo todoImage = todoOptional.get();
 
-       todoImage.setTodoImageUrl(imageUrl);
+        todoImage.setTodoImageUrl(imageUrl);
 
-       repositoryTodo.save(todoImage);
+        repositoryTodo.save(todoImage);
 
     }
 
+    @Override // Get
+    public DtoTodo findByIdTodo(Long id, String userName) {
+
+        DtoTodo dtoTodo = new DtoTodo();
+
+        Optional<User> use = repositoryUser.findByUserName(userName);
+
+        User userDB = use.get();
+
+        Optional<Todo> todoDB = repositoryTodo.findByIdAndUserId(id, userDB.getId());
+
+        dtoTodo.setId(todoDB.get().getId());
+        dtoTodo.setTitle(todoDB.get().getTitle());
+        dtoTodo.setImageTodoUrl(todoDB.get().getTodoImageUrl());
+        dtoTodo.setUserId(todoDB.get().getUser().getId());
+        dtoTodo.setCompleted(todoDB.get().isCompleted());
+
+        return dtoTodo;
+    }
+
+
+
+    @Override // patch
+    public TodoUpdateRequest updatePost(Long id, TodoUpdateRequest todoUpdateRequest, String userName) {
+
+        TodoUpdateRequest updateRequest = new TodoUpdateRequest();
+
+        Optional<User> user = repositoryUser.findByUserName(userName);
+
+        Optional<Todo> todoDB = repositoryTodo.findByIdAndUserId(id, user.get().getId());
+
+        Todo todoDb2 = todoDB.get();
+
+        if (todoUpdateRequest.getCompleted() != null) {
+
+            todoDb2.setCompleted(todoUpdateRequest.getCompleted());
+        }
+        if(todoUpdateRequest.getTitle() != null){
+
+            todoDb2.setTitle(todoUpdateRequest.getTitle());
+
+        }
+        if (todoUpdateRequest.getImage() != null){
+
+            todoDb2.setTodoImageUrl(todoUpdateRequest.getImage());
+        }
+        Todo todoSave = repositoryTodo.save(todoDb2);
+
+        updateRequest.setCompleted(todoSave.isCompleted());
+        updateRequest.setTitle(todoSave.getTitle());
+        updateRequest.setImage(todoSave.getTodoImageUrl());
+        updateRequest.setId(todoSave.getId());
+
+        return updateRequest;
+
+
+    }
 }

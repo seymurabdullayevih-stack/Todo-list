@@ -47,50 +47,5 @@ public class S3ControllerImpl implements IS3Controller {
             return ResponseEntity.status(500).body("Fayl yüklənmədi: " + e.getMessage());
         }
     }
-
-    @Override
-    @PostMapping(path = "/upload/{userId}")
-    public ResponseEntity<String> uploadFile(@PathVariable(name = "userId") Long userId,
-                                             @RequestParam("file") MultipartFile file) {
-
-        try {
-            // 1. Faylı S3-ə yükləyir və URL-ini alır
-            // Məsələn: https://user-app-images.s3.eu-north-1.amazonaws.com/abc123-foto.jpg
-            String fileUrl = is3Service.uploadFile(file);
-
-            // 2. Həmin URL-i DB-dəki istifadəçinin profileImageUrl field-inə yazır
-            // Yəni artıq DB-də null yox, şəklin URL-i olacaq
-            userService.updateProfileImage(userId, fileUrl);
-
-            // 3. Uğurlu cavab qaytarır (200 OK + URL)
-            return ResponseEntity.ok(fileUrl);
-
-        } catch (IOException e) {
-            // Xəta olarsa 500 qaytarır
-            return ResponseEntity.status(500).body("Fayl yüklənmədi: " + e.getMessage());
-        }
-
-    }
-
-    @Override
-    @PostMapping(path = "/upload/{userId}/{id}")
-    public ResponseEntity<String> uploadTodoImageFile(@PathVariable(name = "userId") Long userId,
-                                                      @RequestParam("file") MultipartFile file,
-                                                      @PathVariable(name = "id") Long id) {
-
-        try {
-            String fileUrl = is3Service.uploadFile(file);
-
-            todoService.updateTodoImage(userId,fileUrl,id);
-
-            return ResponseEntity.ok(fileUrl);
-
-        }catch (Exception e){
-
-           return ResponseEntity.status(500).body("fayl yuklenmedi"+ e.getMessage());
-        }
-
-
-    }
 }
 

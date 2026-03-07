@@ -23,6 +23,8 @@ public class SecurtiyConfig {
 
     public static final String REFRESH = "/api/auth/refresh";
 
+    public static final String S3 = "/api/s3/upload";
+
     @Autowired
     private AuthenticationProvider authenticationProvider;
 
@@ -48,7 +50,7 @@ public class SecurtiyConfig {
 
         http.csrf(csrf ->csrf.disable())
                 .authorizeHttpRequests(request ->
-                        request.requestMatchers(AUTHENTICATE, REGISTER, REFRESH).permitAll()
+                        request.requestMatchers(AUTHENTICATE, REGISTER, REFRESH,S3).permitAll()
                                 .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",

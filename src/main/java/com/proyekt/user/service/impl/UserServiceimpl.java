@@ -2,6 +2,7 @@ package com.proyekt.user.service.impl;
 
 import com.proyekt.user.dto.DtoTodo;
 import com.proyekt.user.dto.DtoUser;
+import com.proyekt.user.dto.DtoUserResponse;
 import com.proyekt.user.dto.TodoRequest;
 import com.proyekt.user.model.Todo;
 import com.proyekt.user.model.User;
@@ -63,5 +64,41 @@ public class UserServiceimpl implements IUserService {
         user.setProfileImageUrl(imageUrl);
 
         repositoryUser.save(user);
+    }
+
+
+
+    @Override //patch
+    public DtoUserResponse updateField(Long id, DtoUserResponse dtoUserResponse) {
+
+        DtoUserResponse userResponse = new DtoUserResponse();
+
+        User use = repositoryUser.findById(id)
+                .orElseThrow(() -> new RuntimeException("bu id aid user yoxudur"));
+
+
+        if(dtoUserResponse.getFirstName() != null){
+            use.setFirstName(dtoUserResponse.getFirstName());
+        }
+        if (dtoUserResponse.getLastName() != null){
+            use.setLastName(dtoUserResponse.getLastName());
+        }
+        if (dtoUserResponse.getUserName() != null){
+            use.setUserName(dtoUserResponse.getUserName());
+        }
+        if (dtoUserResponse.getEmail() != null){
+            use.setEmail(dtoUserResponse.getEmail());
+        }
+
+
+        User userSave = repositoryUser.save(use);
+
+        userResponse.setId(userSave.getId());
+        userResponse.setFirstName(userSave.getFirstName());
+        userResponse.setLastName(userSave.getLastName());
+        userResponse.setUserName(userSave.getUsername());
+        userResponse.setEmail(userSave.getEmail());
+
+        return userResponse;
     }
 }

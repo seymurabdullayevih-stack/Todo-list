@@ -11,4 +11,6 @@ public class TodoRequest {
     private String title;
 
     private boolean completed;
+
+    private String todoImageUrl;
 }

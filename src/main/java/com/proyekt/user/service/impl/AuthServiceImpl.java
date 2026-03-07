@@ -57,6 +57,7 @@ public class AuthServiceImpl implements IAuthService {
         user.setLastName(dtoRegisterUser.getLastName());
         user.setUserName(dtoRegisterUser.getUserName());
         user.setEmail(dtoRegisterUser.getEmail());
+        user.setProfileImageUrl(dtoRegisterUser.getImageUser());
         user.setPassword(passwordEncoder.encode(dtoRegisterUser.getPassword()));
         User saveduser = repositoryUser.save(user);
 

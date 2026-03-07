@@ -2,13 +2,11 @@ package com.proyekt.user.Controller.impl;
 
 import com.proyekt.user.Controller.IUserController;
 import com.proyekt.user.dto.DtoUser;
+import com.proyekt.user.dto.DtoUserResponse;
 import com.proyekt.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -20,7 +18,7 @@ public class UserControllerimpl implements IUserController {
 
 
     @Override
-    @GetMapping(path = "/all-list/{id}")
+    @GetMapping(path = "/{id}")
     public DtoUser allList(@PathVariable(name = "id",required = false) String id,
                            Authentication authentication) {
 
@@ -28,5 +26,15 @@ public class UserControllerimpl implements IUserController {
 
 
         return userService.allList(id,userName);
+    }
+    @Override
+    @PatchMapping(path = "/update/{id}")
+    public DtoUserResponse updateField(@PathVariable(name = "id") Long id,
+                                       @RequestBody DtoUserResponse dtoUserResponse) {
+
+
+
+        return userService.updateField(id,dtoUserResponse);
+
     }
 }
